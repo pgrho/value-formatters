@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32104.313
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shipwreck.ValueFormatters", "Shipwreck.ValueFormatters\Shipwreck.ValueFormatters.csproj", "{73511166-A7E4-49E8-84A9-5D124F3FCB4F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{712EFE7A-F678-43B7-BCFD-17CAAD21A40A}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.build.props = Directory.build.props
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shipwreck.ValueFormatters.Tests", "Shipwreck.ValueFormatters.Tests\Shipwreck.ValueFormatters.Tests.csproj", "{589405DA-0E72-497E-BEC0-6464D120B464}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{73511166-A7E4-49E8-84A9-5D124F3FCB4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73511166-A7E4-49E8-84A9-5D124F3FCB4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73511166-A7E4-49E8-84A9-5D124F3FCB4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73511166-A7E4-49E8-84A9-5D124F3FCB4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{589405DA-0E72-497E-BEC0-6464D120B464}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{589405DA-0E72-497E-BEC0-6464D120B464}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{589405DA-0E72-497E-BEC0-6464D120B464}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{589405DA-0E72-497E-BEC0-6464D120B464}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D3722B4C-1988-435B-B687-AE612E586E33}
+	EndGlobalSection
+EndGlobal
