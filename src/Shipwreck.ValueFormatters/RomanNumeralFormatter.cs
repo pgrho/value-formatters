@@ -27,7 +27,7 @@ public sealed class RomanNumeralFormatter : Int32ValueFormatter
             throw new ArgumentException();
         }
         WriteTo(writer, value, isUpperCase, isAddition);
-    } 
+    }
 
     private static bool TryParseFormat(int value, ReadOnlySpan<char> format, out bool isUpperCase, out bool isAddition)
     {

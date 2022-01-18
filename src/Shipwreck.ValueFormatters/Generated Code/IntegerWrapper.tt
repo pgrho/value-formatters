@@ -11,6 +11,7 @@ var types = new []
 	typeof(Int64),
 	typeof(UInt64),
 };
+var knownFormatters = new [] { "RomanNumeralFormatter", "ChineseNumeralFormatter" };
 #>
 <#
 foreach (var t in types)
@@ -70,16 +71,24 @@ public partial struct <#= t.Name #>Wrapper : IEquatable<<#= t.Name #>Wrapper>, I
         if (format?.Length > 0)
         {
             var fs = format.AsSpan();
-
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, fs, provider))
+<#
+for(var fi = 0; fi < knownFormatters.Length; fi++)
+{
+    var fn = knownFormatters[fi];
+    var fv = "f" + fi;
+#>
+            var <#= fv #> = new <#= fn #>();
+            if (<#= fv #>.Supports(1, fs, provider))
             {
-                if (rnf.Supports(Value, fs, provider))
+                if (<#= fv #>.Supports(Value, fs, provider))
                 {
-                    return rnf.ToString(Value, fs, provider);
+                    return <#= fv #>.ToString(Value, fs, provider);
                 }
                 return Value.ToString("D", provider);
             }
+<#
+}
+#>
         }
         return Value.ToString(format, provider);
     }
@@ -125,16 +134,25 @@ public partial struct <#= t.Name #>Wrapper : IEquatable<<#= t.Name #>Wrapper>, I
     {
         if (format.Length > 0)
         {
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, format, provider))
+<#
+for(var fi = 0; fi < knownFormatters.Length; fi++)
+{
+    var fn = knownFormatters[fi];
+    var fv = "f" + fi;
+#>
+            var <#= fv #> = new <#= fn #>();
+            if (<#= fv #>.Supports(1, format, provider))
             {
-                if (rnf.Supports(Value, format, provider))
+                if (<#= fv #>.Supports(Value, format, provider))
                 {
-                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    <#= fv #>.TryFormat(destination,out charsWritten, Value, format, provider);
                     return true;
                 }
                 return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
             }
+<#
+}
+#>
         }
         return Value.TryFormat(destination, out charsWritten, format, provider);
     }

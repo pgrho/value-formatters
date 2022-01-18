@@ -53,13 +53,21 @@ public partial struct SByteWrapper : IEquatable<SByteWrapper>, IComparable, ICom
         if (format?.Length > 0)
         {
             var fs = format.AsSpan();
-
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, fs, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, fs, provider))
             {
-                if (rnf.Supports(Value, fs, provider))
+                if (f0.Supports(Value, fs, provider))
                 {
-                    return rnf.ToString(Value, fs, provider);
+                    return f0.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, fs, provider))
+            {
+                if (f1.Supports(Value, fs, provider))
+                {
+                    return f1.ToString(Value, fs, provider);
                 }
                 return Value.ToString("D", provider);
             }
@@ -115,12 +123,22 @@ public partial struct SByteWrapper : IEquatable<SByteWrapper>, IComparable, ICom
     {
         if (format.Length > 0)
         {
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, format, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, format, provider))
             {
-                if (rnf.Supports(Value, format, provider))
+                if (f0.Supports(Value, format, provider))
                 {
-                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    f0.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, format, provider))
+            {
+                if (f1.Supports(Value, format, provider))
+                {
+                    f1.TryFormat(destination,out charsWritten, Value, format, provider);
                     return true;
                 }
                 return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
@@ -184,13 +202,21 @@ public partial struct ByteWrapper : IEquatable<ByteWrapper>, IComparable, ICompa
         if (format?.Length > 0)
         {
             var fs = format.AsSpan();
-
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, fs, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, fs, provider))
             {
-                if (rnf.Supports(Value, fs, provider))
+                if (f0.Supports(Value, fs, provider))
                 {
-                    return rnf.ToString(Value, fs, provider);
+                    return f0.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, fs, provider))
+            {
+                if (f1.Supports(Value, fs, provider))
+                {
+                    return f1.ToString(Value, fs, provider);
                 }
                 return Value.ToString("D", provider);
             }
@@ -246,12 +272,22 @@ public partial struct ByteWrapper : IEquatable<ByteWrapper>, IComparable, ICompa
     {
         if (format.Length > 0)
         {
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, format, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, format, provider))
             {
-                if (rnf.Supports(Value, format, provider))
+                if (f0.Supports(Value, format, provider))
                 {
-                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    f0.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, format, provider))
+            {
+                if (f1.Supports(Value, format, provider))
+                {
+                    f1.TryFormat(destination,out charsWritten, Value, format, provider);
                     return true;
                 }
                 return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
@@ -315,13 +351,21 @@ public partial struct Int16Wrapper : IEquatable<Int16Wrapper>, IComparable, ICom
         if (format?.Length > 0)
         {
             var fs = format.AsSpan();
-
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, fs, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, fs, provider))
             {
-                if (rnf.Supports(Value, fs, provider))
+                if (f0.Supports(Value, fs, provider))
                 {
-                    return rnf.ToString(Value, fs, provider);
+                    return f0.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, fs, provider))
+            {
+                if (f1.Supports(Value, fs, provider))
+                {
+                    return f1.ToString(Value, fs, provider);
                 }
                 return Value.ToString("D", provider);
             }
@@ -377,12 +421,22 @@ public partial struct Int16Wrapper : IEquatable<Int16Wrapper>, IComparable, ICom
     {
         if (format.Length > 0)
         {
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, format, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, format, provider))
             {
-                if (rnf.Supports(Value, format, provider))
+                if (f0.Supports(Value, format, provider))
                 {
-                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    f0.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, format, provider))
+            {
+                if (f1.Supports(Value, format, provider))
+                {
+                    f1.TryFormat(destination,out charsWritten, Value, format, provider);
                     return true;
                 }
                 return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
@@ -446,13 +500,21 @@ public partial struct UInt16Wrapper : IEquatable<UInt16Wrapper>, IComparable, IC
         if (format?.Length > 0)
         {
             var fs = format.AsSpan();
-
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, fs, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, fs, provider))
             {
-                if (rnf.Supports(Value, fs, provider))
+                if (f0.Supports(Value, fs, provider))
                 {
-                    return rnf.ToString(Value, fs, provider);
+                    return f0.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, fs, provider))
+            {
+                if (f1.Supports(Value, fs, provider))
+                {
+                    return f1.ToString(Value, fs, provider);
                 }
                 return Value.ToString("D", provider);
             }
@@ -508,12 +570,22 @@ public partial struct UInt16Wrapper : IEquatable<UInt16Wrapper>, IComparable, IC
     {
         if (format.Length > 0)
         {
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, format, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, format, provider))
             {
-                if (rnf.Supports(Value, format, provider))
+                if (f0.Supports(Value, format, provider))
                 {
-                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    f0.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, format, provider))
+            {
+                if (f1.Supports(Value, format, provider))
+                {
+                    f1.TryFormat(destination,out charsWritten, Value, format, provider);
                     return true;
                 }
                 return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
@@ -577,13 +649,21 @@ public partial struct Int32Wrapper : IEquatable<Int32Wrapper>, IComparable, ICom
         if (format?.Length > 0)
         {
             var fs = format.AsSpan();
-
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, fs, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, fs, provider))
             {
-                if (rnf.Supports(Value, fs, provider))
+                if (f0.Supports(Value, fs, provider))
                 {
-                    return rnf.ToString(Value, fs, provider);
+                    return f0.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, fs, provider))
+            {
+                if (f1.Supports(Value, fs, provider))
+                {
+                    return f1.ToString(Value, fs, provider);
                 }
                 return Value.ToString("D", provider);
             }
@@ -639,12 +719,22 @@ public partial struct Int32Wrapper : IEquatable<Int32Wrapper>, IComparable, ICom
     {
         if (format.Length > 0)
         {
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, format, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, format, provider))
             {
-                if (rnf.Supports(Value, format, provider))
+                if (f0.Supports(Value, format, provider))
                 {
-                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    f0.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, format, provider))
+            {
+                if (f1.Supports(Value, format, provider))
+                {
+                    f1.TryFormat(destination,out charsWritten, Value, format, provider);
                     return true;
                 }
                 return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
@@ -708,13 +798,21 @@ public partial struct UInt32Wrapper : IEquatable<UInt32Wrapper>, IComparable, IC
         if (format?.Length > 0)
         {
             var fs = format.AsSpan();
-
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, fs, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, fs, provider))
             {
-                if (rnf.Supports(Value, fs, provider))
+                if (f0.Supports(Value, fs, provider))
                 {
-                    return rnf.ToString(Value, fs, provider);
+                    return f0.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, fs, provider))
+            {
+                if (f1.Supports(Value, fs, provider))
+                {
+                    return f1.ToString(Value, fs, provider);
                 }
                 return Value.ToString("D", provider);
             }
@@ -770,12 +868,22 @@ public partial struct UInt32Wrapper : IEquatable<UInt32Wrapper>, IComparable, IC
     {
         if (format.Length > 0)
         {
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, format, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, format, provider))
             {
-                if (rnf.Supports(Value, format, provider))
+                if (f0.Supports(Value, format, provider))
                 {
-                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    f0.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, format, provider))
+            {
+                if (f1.Supports(Value, format, provider))
+                {
+                    f1.TryFormat(destination,out charsWritten, Value, format, provider);
                     return true;
                 }
                 return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
@@ -839,13 +947,21 @@ public partial struct Int64Wrapper : IEquatable<Int64Wrapper>, IComparable, ICom
         if (format?.Length > 0)
         {
             var fs = format.AsSpan();
-
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, fs, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, fs, provider))
             {
-                if (rnf.Supports(Value, fs, provider))
+                if (f0.Supports(Value, fs, provider))
                 {
-                    return rnf.ToString(Value, fs, provider);
+                    return f0.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, fs, provider))
+            {
+                if (f1.Supports(Value, fs, provider))
+                {
+                    return f1.ToString(Value, fs, provider);
                 }
                 return Value.ToString("D", provider);
             }
@@ -901,12 +1017,22 @@ public partial struct Int64Wrapper : IEquatable<Int64Wrapper>, IComparable, ICom
     {
         if (format.Length > 0)
         {
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, format, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, format, provider))
             {
-                if (rnf.Supports(Value, format, provider))
+                if (f0.Supports(Value, format, provider))
                 {
-                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    f0.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, format, provider))
+            {
+                if (f1.Supports(Value, format, provider))
+                {
+                    f1.TryFormat(destination,out charsWritten, Value, format, provider);
                     return true;
                 }
                 return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
@@ -970,13 +1096,21 @@ public partial struct UInt64Wrapper : IEquatable<UInt64Wrapper>, IComparable, IC
         if (format?.Length > 0)
         {
             var fs = format.AsSpan();
-
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, fs, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, fs, provider))
             {
-                if (rnf.Supports(Value, fs, provider))
+                if (f0.Supports(Value, fs, provider))
                 {
-                    return rnf.ToString(Value, fs, provider);
+                    return f0.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, fs, provider))
+            {
+                if (f1.Supports(Value, fs, provider))
+                {
+                    return f1.ToString(Value, fs, provider);
                 }
                 return Value.ToString("D", provider);
             }
@@ -1032,12 +1166,22 @@ public partial struct UInt64Wrapper : IEquatable<UInt64Wrapper>, IComparable, IC
     {
         if (format.Length > 0)
         {
-            var rnf = new RomanNumeralFormatter();
-            if (rnf.Supports(1, format, provider))
+            var f0 = new RomanNumeralFormatter();
+            if (f0.Supports(1, format, provider))
             {
-                if (rnf.Supports(Value, format, provider))
+                if (f0.Supports(Value, format, provider))
                 {
-                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    f0.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+            var f1 = new ChineseNumeralFormatter();
+            if (f1.Supports(1, format, provider))
+            {
+                if (f1.Supports(Value, format, provider))
+                {
+                    f1.TryFormat(destination,out charsWritten, Value, format, provider);
                     return true;
                 }
                 return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
