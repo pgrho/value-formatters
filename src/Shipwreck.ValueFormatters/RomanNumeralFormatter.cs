@@ -4,78 +4,95 @@ namespace Shipwreck.ValueFormatters;
 
 public sealed class RomanNumeralFormatter : Int32ValueFormatter
 {
-    public override bool Supports(int value, string format, IFormatProvider formatProvider)
+    public override bool Supports(int value, ReadOnlySpan<char> format, IFormatProvider provider)
         => Supports(value, format);
 
     public static bool Supports(int value, string format)
-        => 1 <= value
-        && value < 4000
-        && format switch
-        {
-            "L" => true,
-            "l" => true,
-            "LA" => true,
-            "la" => true,
-            "LS" => true,
-            "ls" => true,
-            _ => false,
-        };
+        => format != null
+        && Supports(value, format.AsSpan());
 
-    public override void WriteTo(TextWriter writer, int value, string format, IFormatProvider formatProvider)
+    public static bool Supports(int value, ReadOnlySpan<char> format)
+        => TryParseFormat(value, format, out var _, out var _);
+
+    public override void WriteTo(TextWriter writer, int value, ReadOnlySpan<char> format, IFormatProvider provider)
         => WriteTo(writer, value, format);
 
     public static void WriteTo(TextWriter writer, int value, string format)
+        => WriteTo(writer, value, format.AsSpan());
+
+    public static void WriteTo(TextWriter writer, int value, ReadOnlySpan<char> format)
     {
-        if (value <= 0 || 4000 <= value)
+        if (!TryParseFormat(value, format, out var isUpperCase, out var isAddition))
         {
-            throw new ArgumentOutOfRangeException(nameof(value));
+            throw new ArgumentException();
         }
-        switch (format)
+        WriteTo(writer, value, isUpperCase, isAddition);
+    } 
+
+    private static bool TryParseFormat(int value, ReadOnlySpan<char> format, out bool isUpperCase, out bool isAddition)
+    {
+        if (0 < value && value < 4000)
         {
-            case "L":
-            case "LS":
-                WriteTo(writer, value, true, false);
-                return;
+            switch (format.Length)
+            {
+                case 1:
+                    switch (format[0])
+                    {
+                        case 'L':
+                        case 'l':
+                            isUpperCase = format[0] == 'L';
+                            isAddition = false;
+                            return true;
+                    }
+                    break;
 
-            case "l":
-            case "ls":
-                WriteTo(writer, value, false, false);
-                return;
-
-            case "LA":
-                WriteTo(writer, value, true, true);
-                return;
-
-            case "la":
-                WriteTo(writer, value, false, true);
-                return;
+                case 2:
+                    switch (format[0])
+                    {
+                        case 'L':
+                        case 'l':
+                            switch (format[1])
+                            {
+                                case 'A':
+                                case 'a':
+                                case 'S':
+                                case 's':
+                                    isUpperCase = format[0] == 'L';
+                                    isAddition = format[1] == 'A' || format[1] == 'a';
+                                    return true;
+                            }
+                            break;
+                    }
+                    break;
+            }
         }
-        throw new NotSupportedException();
+
+        isUpperCase = isAddition = false;
+        return false;
     }
+
+    static char GetNumeral(int n, bool isUpperCase)
+        => (char)(n switch
+        {
+            1 => 'I',
+            5 => 'V',
+            10 => 'X',
+            50 => 'L',
+            100 => 'C',
+            500 => 'D',
+            1000 => 'M',
+            _ => throw new ArgumentOutOfRangeException()
+        } + (isUpperCase ? 0 : ('a' - 'A')));
 
     private static void WriteTo(TextWriter writer, int value, bool isUpperCase, bool isAddition)
     {
-        static char getNumeral(int n)
-            => n switch
-            {
-                1 => 'I',
-                5 => 'V',
-                10 => 'X',
-                50 => 'L',
-                100 => 'C',
-                500 => 'D',
-                1000 => 'M',
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
-        var offset = isUpperCase ? 0 : ('a' - 'A');
         for (var div = 1000; div > 0; div /= 10)
         {
             var en = Math.DivRem(value, div, out var mr);
 
-            if (1 <= en && en <= 3 || (en == 4 && isAddition))
+            if (1 <= en && en <= 3 || en == 4 && isAddition)
             {
-                var c = (char)(getNumeral(div) + offset);
+                var c = GetNumeral(div, isUpperCase);
                 for (var i = 1; i <= en; i++)
                 {
                     writer.Write(c);
@@ -83,13 +100,13 @@ public sealed class RomanNumeralFormatter : Int32ValueFormatter
             }
             else if (en == 4 && !isAddition)
             {
-                writer.Write((char)(getNumeral(div) + offset));
-                writer.Write((char)(getNumeral(div * 5) + offset));
+                writer.Write(GetNumeral(div, isUpperCase));
+                writer.Write(GetNumeral(div * 5, isUpperCase));
             }
-            else if (5 <= en && en <= 8 || (en == 9 && isAddition))
+            else if (5 <= en && en <= 8 || en == 9 && isAddition)
             {
-                writer.Write((char)(getNumeral(div * 5) + offset));
-                var c = (char)(getNumeral(div) + offset);
+                writer.Write(GetNumeral(div * 5, isUpperCase));
+                var c = GetNumeral(div, isUpperCase);
                 for (var i = 6; i <= en; i++)
                 {
                     writer.Write(c);
@@ -97,8 +114,8 @@ public sealed class RomanNumeralFormatter : Int32ValueFormatter
             }
             else if (en == 9 && !isAddition)
             {
-                writer.Write((char)(getNumeral(div) + offset));
-                writer.Write((char)(getNumeral(div * 10) + offset));
+                writer.Write(GetNumeral(div, isUpperCase));
+                writer.Write(GetNumeral(div * 10, isUpperCase));
             }
 
             value = mr;

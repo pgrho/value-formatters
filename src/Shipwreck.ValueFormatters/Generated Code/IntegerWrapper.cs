@@ -1,5 +1,8 @@
 ﻿namespace Shipwreck.ValueFormatters;
 public partial struct SByteWrapper : IEquatable<SByteWrapper>, IComparable, IComparable<SByteWrapper>, IConvertible, IFormattable
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
 	public SByteWrapper(SByte value)
 		=> Value = value;
@@ -47,19 +50,25 @@ public partial struct SByteWrapper : IEquatable<SByteWrapper>, IComparable, ICom
 
     public string ToString(string format, IFormatProvider provider)
     {
-        var rnf = new RomanNumeralFormatter();
-        if (rnf.Supports(1, format, provider))
+        if (format?.Length > 0)
         {
-            if (rnf.Supports(Value, format, provider))
+            var fs = format.AsSpan();
+
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, fs, provider))
             {
-                return rnf.ToString(Value, format, provider);
+                if (rnf.Supports(Value, fs, provider))
+                {
+                    return rnf.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
             }
-            return Value.ToString("D", provider);
         }
         return Value.ToString(format, provider);
     }
 
     #region IConvertible
+
     TypeCode IConvertible.GetTypeCode() => Value.GetTypeCode();
 
     object IConvertible.ToType(Type conversionType, IFormatProvider provider)
@@ -69,11 +78,12 @@ public partial struct SByteWrapper : IEquatable<SByteWrapper>, IComparable, ICom
 
     decimal IConvertible.ToDecimal(IFormatProvider provider)
         => Value;
+
     double IConvertible.ToDouble(IFormatProvider provider)
         => Value;
+
     float IConvertible.ToSingle(IFormatProvider provider)
         => Value;
-        
 
     bool IConvertible.ToBoolean(IFormatProvider provider)
         => ((IConvertible)Value).ToBoolean(provider);
@@ -100,8 +110,30 @@ public partial struct SByteWrapper : IEquatable<SByteWrapper>, IComparable, ICom
         => checked((UInt64)Value);
 
     #endregion IConvertible
+#if NET6_0_OR_GREATER
+    public bool TryFormat (Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+    {
+        if (format.Length > 0)
+        {
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, format, provider))
+            {
+                if (rnf.Supports(Value, format, provider))
+                {
+                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+        }
+        return Value.TryFormat(destination, out charsWritten, format, provider);
+    }
+#endif
 }
 public partial struct ByteWrapper : IEquatable<ByteWrapper>, IComparable, IComparable<ByteWrapper>, IConvertible, IFormattable
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
 	public ByteWrapper(Byte value)
 		=> Value = value;
@@ -149,19 +181,25 @@ public partial struct ByteWrapper : IEquatable<ByteWrapper>, IComparable, ICompa
 
     public string ToString(string format, IFormatProvider provider)
     {
-        var rnf = new RomanNumeralFormatter();
-        if (rnf.Supports(1, format, provider))
+        if (format?.Length > 0)
         {
-            if (rnf.Supports(Value, format, provider))
+            var fs = format.AsSpan();
+
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, fs, provider))
             {
-                return rnf.ToString(Value, format, provider);
+                if (rnf.Supports(Value, fs, provider))
+                {
+                    return rnf.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
             }
-            return Value.ToString("D", provider);
         }
         return Value.ToString(format, provider);
     }
 
     #region IConvertible
+
     TypeCode IConvertible.GetTypeCode() => Value.GetTypeCode();
 
     object IConvertible.ToType(Type conversionType, IFormatProvider provider)
@@ -171,11 +209,12 @@ public partial struct ByteWrapper : IEquatable<ByteWrapper>, IComparable, ICompa
 
     decimal IConvertible.ToDecimal(IFormatProvider provider)
         => Value;
+
     double IConvertible.ToDouble(IFormatProvider provider)
         => Value;
+
     float IConvertible.ToSingle(IFormatProvider provider)
         => Value;
-        
 
     bool IConvertible.ToBoolean(IFormatProvider provider)
         => ((IConvertible)Value).ToBoolean(provider);
@@ -202,8 +241,30 @@ public partial struct ByteWrapper : IEquatable<ByteWrapper>, IComparable, ICompa
         => checked((UInt64)Value);
 
     #endregion IConvertible
+#if NET6_0_OR_GREATER
+    public bool TryFormat (Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+    {
+        if (format.Length > 0)
+        {
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, format, provider))
+            {
+                if (rnf.Supports(Value, format, provider))
+                {
+                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+        }
+        return Value.TryFormat(destination, out charsWritten, format, provider);
+    }
+#endif
 }
 public partial struct Int16Wrapper : IEquatable<Int16Wrapper>, IComparable, IComparable<Int16Wrapper>, IConvertible, IFormattable
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
 	public Int16Wrapper(Int16 value)
 		=> Value = value;
@@ -251,19 +312,25 @@ public partial struct Int16Wrapper : IEquatable<Int16Wrapper>, IComparable, ICom
 
     public string ToString(string format, IFormatProvider provider)
     {
-        var rnf = new RomanNumeralFormatter();
-        if (rnf.Supports(1, format, provider))
+        if (format?.Length > 0)
         {
-            if (rnf.Supports(Value, format, provider))
+            var fs = format.AsSpan();
+
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, fs, provider))
             {
-                return rnf.ToString(Value, format, provider);
+                if (rnf.Supports(Value, fs, provider))
+                {
+                    return rnf.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
             }
-            return Value.ToString("D", provider);
         }
         return Value.ToString(format, provider);
     }
 
     #region IConvertible
+
     TypeCode IConvertible.GetTypeCode() => Value.GetTypeCode();
 
     object IConvertible.ToType(Type conversionType, IFormatProvider provider)
@@ -273,11 +340,12 @@ public partial struct Int16Wrapper : IEquatable<Int16Wrapper>, IComparable, ICom
 
     decimal IConvertible.ToDecimal(IFormatProvider provider)
         => Value;
+
     double IConvertible.ToDouble(IFormatProvider provider)
         => Value;
+
     float IConvertible.ToSingle(IFormatProvider provider)
         => Value;
-        
 
     bool IConvertible.ToBoolean(IFormatProvider provider)
         => ((IConvertible)Value).ToBoolean(provider);
@@ -304,8 +372,30 @@ public partial struct Int16Wrapper : IEquatable<Int16Wrapper>, IComparable, ICom
         => checked((UInt64)Value);
 
     #endregion IConvertible
+#if NET6_0_OR_GREATER
+    public bool TryFormat (Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+    {
+        if (format.Length > 0)
+        {
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, format, provider))
+            {
+                if (rnf.Supports(Value, format, provider))
+                {
+                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+        }
+        return Value.TryFormat(destination, out charsWritten, format, provider);
+    }
+#endif
 }
 public partial struct UInt16Wrapper : IEquatable<UInt16Wrapper>, IComparable, IComparable<UInt16Wrapper>, IConvertible, IFormattable
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
 	public UInt16Wrapper(UInt16 value)
 		=> Value = value;
@@ -353,19 +443,25 @@ public partial struct UInt16Wrapper : IEquatable<UInt16Wrapper>, IComparable, IC
 
     public string ToString(string format, IFormatProvider provider)
     {
-        var rnf = new RomanNumeralFormatter();
-        if (rnf.Supports(1, format, provider))
+        if (format?.Length > 0)
         {
-            if (rnf.Supports(Value, format, provider))
+            var fs = format.AsSpan();
+
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, fs, provider))
             {
-                return rnf.ToString(Value, format, provider);
+                if (rnf.Supports(Value, fs, provider))
+                {
+                    return rnf.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
             }
-            return Value.ToString("D", provider);
         }
         return Value.ToString(format, provider);
     }
 
     #region IConvertible
+
     TypeCode IConvertible.GetTypeCode() => Value.GetTypeCode();
 
     object IConvertible.ToType(Type conversionType, IFormatProvider provider)
@@ -375,11 +471,12 @@ public partial struct UInt16Wrapper : IEquatable<UInt16Wrapper>, IComparable, IC
 
     decimal IConvertible.ToDecimal(IFormatProvider provider)
         => Value;
+
     double IConvertible.ToDouble(IFormatProvider provider)
         => Value;
+
     float IConvertible.ToSingle(IFormatProvider provider)
         => Value;
-        
 
     bool IConvertible.ToBoolean(IFormatProvider provider)
         => ((IConvertible)Value).ToBoolean(provider);
@@ -406,8 +503,30 @@ public partial struct UInt16Wrapper : IEquatable<UInt16Wrapper>, IComparable, IC
         => checked((UInt64)Value);
 
     #endregion IConvertible
+#if NET6_0_OR_GREATER
+    public bool TryFormat (Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+    {
+        if (format.Length > 0)
+        {
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, format, provider))
+            {
+                if (rnf.Supports(Value, format, provider))
+                {
+                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+        }
+        return Value.TryFormat(destination, out charsWritten, format, provider);
+    }
+#endif
 }
 public partial struct Int32Wrapper : IEquatable<Int32Wrapper>, IComparable, IComparable<Int32Wrapper>, IConvertible, IFormattable
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
 	public Int32Wrapper(Int32 value)
 		=> Value = value;
@@ -455,19 +574,25 @@ public partial struct Int32Wrapper : IEquatable<Int32Wrapper>, IComparable, ICom
 
     public string ToString(string format, IFormatProvider provider)
     {
-        var rnf = new RomanNumeralFormatter();
-        if (rnf.Supports(1, format, provider))
+        if (format?.Length > 0)
         {
-            if (rnf.Supports(Value, format, provider))
+            var fs = format.AsSpan();
+
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, fs, provider))
             {
-                return rnf.ToString(Value, format, provider);
+                if (rnf.Supports(Value, fs, provider))
+                {
+                    return rnf.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
             }
-            return Value.ToString("D", provider);
         }
         return Value.ToString(format, provider);
     }
 
     #region IConvertible
+
     TypeCode IConvertible.GetTypeCode() => Value.GetTypeCode();
 
     object IConvertible.ToType(Type conversionType, IFormatProvider provider)
@@ -477,11 +602,12 @@ public partial struct Int32Wrapper : IEquatable<Int32Wrapper>, IComparable, ICom
 
     decimal IConvertible.ToDecimal(IFormatProvider provider)
         => Value;
+
     double IConvertible.ToDouble(IFormatProvider provider)
         => Value;
+
     float IConvertible.ToSingle(IFormatProvider provider)
         => Value;
-        
 
     bool IConvertible.ToBoolean(IFormatProvider provider)
         => ((IConvertible)Value).ToBoolean(provider);
@@ -508,8 +634,30 @@ public partial struct Int32Wrapper : IEquatable<Int32Wrapper>, IComparable, ICom
         => checked((UInt64)Value);
 
     #endregion IConvertible
+#if NET6_0_OR_GREATER
+    public bool TryFormat (Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+    {
+        if (format.Length > 0)
+        {
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, format, provider))
+            {
+                if (rnf.Supports(Value, format, provider))
+                {
+                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+        }
+        return Value.TryFormat(destination, out charsWritten, format, provider);
+    }
+#endif
 }
 public partial struct UInt32Wrapper : IEquatable<UInt32Wrapper>, IComparable, IComparable<UInt32Wrapper>, IConvertible, IFormattable
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
 	public UInt32Wrapper(UInt32 value)
 		=> Value = value;
@@ -557,19 +705,25 @@ public partial struct UInt32Wrapper : IEquatable<UInt32Wrapper>, IComparable, IC
 
     public string ToString(string format, IFormatProvider provider)
     {
-        var rnf = new RomanNumeralFormatter();
-        if (rnf.Supports(1, format, provider))
+        if (format?.Length > 0)
         {
-            if (rnf.Supports(Value, format, provider))
+            var fs = format.AsSpan();
+
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, fs, provider))
             {
-                return rnf.ToString(Value, format, provider);
+                if (rnf.Supports(Value, fs, provider))
+                {
+                    return rnf.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
             }
-            return Value.ToString("D", provider);
         }
         return Value.ToString(format, provider);
     }
 
     #region IConvertible
+
     TypeCode IConvertible.GetTypeCode() => Value.GetTypeCode();
 
     object IConvertible.ToType(Type conversionType, IFormatProvider provider)
@@ -579,11 +733,12 @@ public partial struct UInt32Wrapper : IEquatable<UInt32Wrapper>, IComparable, IC
 
     decimal IConvertible.ToDecimal(IFormatProvider provider)
         => Value;
+
     double IConvertible.ToDouble(IFormatProvider provider)
         => Value;
+
     float IConvertible.ToSingle(IFormatProvider provider)
         => Value;
-        
 
     bool IConvertible.ToBoolean(IFormatProvider provider)
         => ((IConvertible)Value).ToBoolean(provider);
@@ -610,8 +765,30 @@ public partial struct UInt32Wrapper : IEquatable<UInt32Wrapper>, IComparable, IC
         => checked((UInt64)Value);
 
     #endregion IConvertible
+#if NET6_0_OR_GREATER
+    public bool TryFormat (Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+    {
+        if (format.Length > 0)
+        {
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, format, provider))
+            {
+                if (rnf.Supports(Value, format, provider))
+                {
+                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+        }
+        return Value.TryFormat(destination, out charsWritten, format, provider);
+    }
+#endif
 }
 public partial struct Int64Wrapper : IEquatable<Int64Wrapper>, IComparable, IComparable<Int64Wrapper>, IConvertible, IFormattable
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
 	public Int64Wrapper(Int64 value)
 		=> Value = value;
@@ -659,19 +836,25 @@ public partial struct Int64Wrapper : IEquatable<Int64Wrapper>, IComparable, ICom
 
     public string ToString(string format, IFormatProvider provider)
     {
-        var rnf = new RomanNumeralFormatter();
-        if (rnf.Supports(1, format, provider))
+        if (format?.Length > 0)
         {
-            if (rnf.Supports(Value, format, provider))
+            var fs = format.AsSpan();
+
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, fs, provider))
             {
-                return rnf.ToString(Value, format, provider);
+                if (rnf.Supports(Value, fs, provider))
+                {
+                    return rnf.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
             }
-            return Value.ToString("D", provider);
         }
         return Value.ToString(format, provider);
     }
 
     #region IConvertible
+
     TypeCode IConvertible.GetTypeCode() => Value.GetTypeCode();
 
     object IConvertible.ToType(Type conversionType, IFormatProvider provider)
@@ -681,11 +864,12 @@ public partial struct Int64Wrapper : IEquatable<Int64Wrapper>, IComparable, ICom
 
     decimal IConvertible.ToDecimal(IFormatProvider provider)
         => Value;
+
     double IConvertible.ToDouble(IFormatProvider provider)
         => Value;
+
     float IConvertible.ToSingle(IFormatProvider provider)
         => Value;
-        
 
     bool IConvertible.ToBoolean(IFormatProvider provider)
         => ((IConvertible)Value).ToBoolean(provider);
@@ -712,8 +896,30 @@ public partial struct Int64Wrapper : IEquatable<Int64Wrapper>, IComparable, ICom
         => checked((UInt64)Value);
 
     #endregion IConvertible
+#if NET6_0_OR_GREATER
+    public bool TryFormat (Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+    {
+        if (format.Length > 0)
+        {
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, format, provider))
+            {
+                if (rnf.Supports(Value, format, provider))
+                {
+                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+        }
+        return Value.TryFormat(destination, out charsWritten, format, provider);
+    }
+#endif
 }
 public partial struct UInt64Wrapper : IEquatable<UInt64Wrapper>, IComparable, IComparable<UInt64Wrapper>, IConvertible, IFormattable
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
 	public UInt64Wrapper(UInt64 value)
 		=> Value = value;
@@ -761,19 +967,25 @@ public partial struct UInt64Wrapper : IEquatable<UInt64Wrapper>, IComparable, IC
 
     public string ToString(string format, IFormatProvider provider)
     {
-        var rnf = new RomanNumeralFormatter();
-        if (rnf.Supports(1, format, provider))
+        if (format?.Length > 0)
         {
-            if (rnf.Supports(Value, format, provider))
+            var fs = format.AsSpan();
+
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, fs, provider))
             {
-                return rnf.ToString(Value, format, provider);
+                if (rnf.Supports(Value, fs, provider))
+                {
+                    return rnf.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
             }
-            return Value.ToString("D", provider);
         }
         return Value.ToString(format, provider);
     }
 
     #region IConvertible
+
     TypeCode IConvertible.GetTypeCode() => Value.GetTypeCode();
 
     object IConvertible.ToType(Type conversionType, IFormatProvider provider)
@@ -783,11 +995,12 @@ public partial struct UInt64Wrapper : IEquatable<UInt64Wrapper>, IComparable, IC
 
     decimal IConvertible.ToDecimal(IFormatProvider provider)
         => Value;
+
     double IConvertible.ToDouble(IFormatProvider provider)
         => Value;
+
     float IConvertible.ToSingle(IFormatProvider provider)
         => Value;
-        
 
     bool IConvertible.ToBoolean(IFormatProvider provider)
         => ((IConvertible)Value).ToBoolean(provider);
@@ -814,4 +1027,23 @@ public partial struct UInt64Wrapper : IEquatable<UInt64Wrapper>, IComparable, IC
         => checked((UInt64)Value);
 
     #endregion IConvertible
+#if NET6_0_OR_GREATER
+    public bool TryFormat (Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+    {
+        if (format.Length > 0)
+        {
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, format, provider))
+            {
+                if (rnf.Supports(Value, format, provider))
+                {
+                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+        }
+        return Value.TryFormat(destination, out charsWritten, format, provider);
+    }
+#endif
 }

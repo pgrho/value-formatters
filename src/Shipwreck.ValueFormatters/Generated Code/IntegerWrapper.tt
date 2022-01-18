@@ -17,6 +17,9 @@ foreach (var t in types)
 {
 #>
 public partial struct <#= t.Name #>Wrapper : IEquatable<<#= t.Name #>Wrapper>, IComparable, IComparable<<#= t.Name #>Wrapper>, IConvertible, IFormattable
+#if NET6_0_OR_GREATER
+    , ISpanFormattable
+#endif
 {
 	public <#= t.Name #>Wrapper(<#= t.Name #> value)
 		=> Value = value;
@@ -64,19 +67,25 @@ public partial struct <#= t.Name #>Wrapper : IEquatable<<#= t.Name #>Wrapper>, I
 
     public string ToString(string format, IFormatProvider provider)
     {
-        var rnf = new RomanNumeralFormatter();
-        if (rnf.Supports(1, format, provider))
+        if (format?.Length > 0)
         {
-            if (rnf.Supports(Value, format, provider))
+            var fs = format.AsSpan();
+
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, fs, provider))
             {
-                return rnf.ToString(Value, format, provider);
+                if (rnf.Supports(Value, fs, provider))
+                {
+                    return rnf.ToString(Value, fs, provider);
+                }
+                return Value.ToString("D", provider);
             }
-            return Value.ToString("D", provider);
         }
         return Value.ToString(format, provider);
     }
 
     #region IConvertible
+
     TypeCode IConvertible.GetTypeCode() => Value.GetTypeCode();
 
     object IConvertible.ToType(Type conversionType, IFormatProvider provider)
@@ -86,11 +95,12 @@ public partial struct <#= t.Name #>Wrapper : IEquatable<<#= t.Name #>Wrapper>, I
 
     decimal IConvertible.ToDecimal(IFormatProvider provider)
         => Value;
+
     double IConvertible.ToDouble(IFormatProvider provider)
         => Value;
+
     float IConvertible.ToSingle(IFormatProvider provider)
         => Value;
-        
 
     bool IConvertible.ToBoolean(IFormatProvider provider)
         => ((IConvertible)Value).ToBoolean(provider);
@@ -110,6 +120,25 @@ public partial struct <#= t.Name #>Wrapper : IEquatable<<#= t.Name #>Wrapper>, I
 #>
 
     #endregion IConvertible
+#if NET6_0_OR_GREATER
+    public bool TryFormat (Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+    {
+        if (format.Length > 0)
+        {
+            var rnf = new RomanNumeralFormatter();
+            if (rnf.Supports(1, format, provider))
+            {
+                if (rnf.Supports(Value, format, provider))
+                {
+                    rnf.TryFormat(destination,out charsWritten, Value, format, provider);
+                    return true;
+                }
+                return Value.TryFormat(destination, out charsWritten, "D".AsSpan(), provider);
+            }
+        }
+        return Value.TryFormat(destination, out charsWritten, format, provider);
+    }
+#endif
 }
 <#
 }
