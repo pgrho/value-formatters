@@ -12,7 +12,7 @@ public sealed class ChineseNumeralFormatter : Int32ValueFormatter
         && Supports(value, format.AsSpan());
 
     public static bool Supports(int value, ReadOnlySpan<char> format)
-        => TryParseFormat(value, format);
+        => TryParseFormat(value, format, out var _, out var _);
 
     public override void WriteTo(TextWriter writer, int value, ReadOnlySpan<char> format, IFormatProvider provider)
         => WriteTo(writer, value, format);
@@ -22,26 +22,141 @@ public sealed class ChineseNumeralFormatter : Int32ValueFormatter
 
     public static void WriteTo(TextWriter writer, int value, ReadOnlySpan<char> format)
     {
-        if (!TryParseFormat(value, format))
+        if (!TryParseFormat(value, format, out var charset, out var isDigitMode))
         {
             throw new ArgumentException();
         }
-        WriteTo(writer, value);
+        if (isDigitMode)
+        {
+            WriteDigitsTo(writer, value, charset);
+        }
+        else
+        {
+            WriteTo(writer, value, charset);
+        }
     }
 
-    private static bool TryParseFormat(int value, ReadOnlySpan<char> format)
+    private static bool TryParseFormat(int value, ReadOnlySpan<char> format, out CharsetFlags charset, out bool isDigitMode)
     {
-        if (value < 0)
+        // (cj|jp)d?([-+][0-9jhsmo])*
+        // (cj|jp): base charset
+        // d?: digitMode
+        // [-+][0-9jhsmo]: disable or enable each alternative char
+        if (value >= 0 && 2 <= format.Length)
         {
-            return false;
+            isDigitMode = format.Length >= 3 && format[2] == 'd';
+
+            if (format[0] == 'c' && format[1] == 'j')
+            {
+                charset = CharsetFlags.Standard;
+            }
+            else if (format[0] == 'j' && format[1] == 'p')
+            {
+                charset = CharsetFlags.Japanese;
+            }
+            else
+            {
+                charset = default;
+                isDigitMode = false;
+                return false;
+            }
+
+            for (var p = isDigitMode ? 3 : 2; p < format.Length; p += 2)
+            {
+                if (p + 2 > format.Length)
+                {
+                    return false;
+                }
+
+                switch (format[p])
+                {
+                    case '-':
+                    case '+':
+
+                        var cf = format[p + 1].ToCharsetFlags();
+                        if (cf == default)
+                        {
+                            return false;
+                        }
+
+                        if (format[p] == '-')
+                        {
+                            charset |= cf;
+                        }
+                        else
+                        {
+                            charset &= ~cf;
+                        }
+                        break;
+
+                    case '<':
+                    case '>':
+                        var rf = format[p] == '<' ? format[p + 1].ToCharsetFlagsLessThan() : format[p + 1].ToCharsetFlagsGreaterThan();
+                        if (rf == default)
+                        {
+                            return false;
+                        }
+                        charset |= rf;
+                        break;
+
+                    default:
+                        return false;
+                }
+            }
+            return true;
         }
 
-        // TODO: (cj|jp|cn|tw)d?\d?
-        return format.Length == 2 && format[0] == 'c' && format[1] == 'j';
+        charset = default;
+        isDigitMode = false;
+
+        return false;
     }
 
-    static char GetNumeral(int n)
+    static char GetNumeral(int n, CharsetFlags charset)
     {
+        var substitute = ((n switch
+        {
+            0 => CharsetFlags.Fallback0,
+            1 => CharsetFlags.Fallback1,
+            2 => CharsetFlags.Fallback2,
+            3 => CharsetFlags.Fallback3,
+            4 => CharsetFlags.Fallback4,
+            5 => CharsetFlags.Fallback5,
+            6 => CharsetFlags.Fallback6,
+            7 => CharsetFlags.Fallback7,
+            8 => CharsetFlags.Fallback8,
+            9 => CharsetFlags.Fallback9,
+            10 => CharsetFlags.Fallback10,
+            100 => CharsetFlags.Fallback100,
+            1000 => CharsetFlags.Fallback1000,
+            10000 => CharsetFlags.Fallback10000,
+            100000000 => CharsetFlags.Fallback100000000,
+            _ => default
+        }) & charset) == 0;
+
+        if ((charset & CharsetFlags.Japanese) != 0
+            && substitute)
+        {
+            return n switch
+            {
+                0 => '零',
+                1 => '壱',
+                2 => '弐',
+                3 => '参',
+                4 => '肆',
+                5 => '伍',
+                6 => '陸',
+                7 => '漆',
+                8 => '捌',
+                9 => '玖',
+                10 => '拾',
+                100 => '陌',
+                1000 => '阡',
+                10000 => '萬',
+                100000000 => '億',
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
         return n switch
         {
             0 => '〇',
@@ -63,11 +178,11 @@ public sealed class ChineseNumeralFormatter : Int32ValueFormatter
         };
     }
 
-    private static void WriteTo(TextWriter writer, int value)
+    private static void WriteTo(TextWriter writer, int value, CharsetFlags charset)
     {
         if (value == 0)
         {
-            writer.Write(GetNumeral(0));
+            writer.Write(GetNumeral(0, charset));
             return;
         }
         for (var div = 10000_0000; div > 0; div /= 10000)
@@ -84,12 +199,12 @@ public sealed class ChineseNumeralFormatter : Int32ValueFormatter
 
                     if (en2 > 1 || (en2 == 1 && div2 == 1))
                     {
-                        writer.Write(GetNumeral(en2));
+                        writer.Write(GetNumeral(en2, charset));
                     }
 
                     if (en2 > 0 && div2 > 1)
                     {
-                        writer.Write(GetNumeral(div2));
+                        writer.Write(GetNumeral(div2, charset));
                     }
 
                     en = mr2;
@@ -97,8 +212,31 @@ public sealed class ChineseNumeralFormatter : Int32ValueFormatter
 
                 if (div > 1)
                 {
-                    writer.Write(GetNumeral(div));
+                    writer.Write(GetNumeral(div, charset));
                 }
+            }
+
+            value = mr;
+        }
+    }
+
+    private static void WriteDigitsTo(TextWriter writer, int value, CharsetFlags charset)
+    {
+        if (value == 0)
+        {
+            writer.Write(GetNumeral(0, charset));
+            return;
+        }
+
+        var first = true;
+        for (var div = 10_0000_0000; div > 0; div /= 10)
+        {
+            var en = Math.DivRem(value, div, out var mr);
+
+            if (en > 0 || !first)
+            {
+                writer.Write(GetNumeral(en, charset));
+                first = false;
             }
 
             value = mr;
