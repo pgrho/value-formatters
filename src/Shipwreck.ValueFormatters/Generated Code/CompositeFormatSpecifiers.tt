@@ -1,0 +1,68 @@
+﻿using System.IO;
+
+namespace Shipwreck.ValueFormatters.Composition;
+
+<#
+for (var s = 2; s < 16; s++)
+{
+#>
+internal sealed class CompositeFormatSpecifier<TValue
+<#
+for (var i = 1; i <= s; i++)
+{
+#>
+    , TSpecifier<#= i #>
+<#
+}
+#>
+> : IFormatSpecifier<TValue>
+<#
+for (var i = 1; i <= s; i++)
+{
+#>
+    where TSpecifier<#= i #> : struct, IStructFormatSpecifier<TValue>
+<#
+}
+#>
+{
+
+    public void WriteTo(TextWriter writer, TValue value, IFormatProvider formatProvider)
+    {
+<#
+for (var i = 1; i <= s; i++)
+{
+#>
+        default(TSpecifier<#= i #>).WriteTo(writer, value, formatProvider);
+<#
+}
+#>
+    }
+    public bool TryFormat(Span<char> destination, out int charsWritten, TValue value, IFormatProvider formatProvider)
+    {
+        var rem = destination;
+        charsWritten = 0;
+        
+<#
+for (var i = 1; i <= s; i++)
+{
+#>
+        {
+            if (!default(TSpecifier<#= i #>).TryFormat(rem, out var sl, value, formatProvider))
+            {
+                return false;
+            }
+            rem = rem.Slice(sl);
+            charsWritten += sl;
+        }
+<#
+}
+#>
+
+        return true;
+    }
+}
+<#
+}
+#>
+
+

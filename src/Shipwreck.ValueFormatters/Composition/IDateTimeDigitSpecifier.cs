@@ -1,6 +1,6 @@
 ﻿namespace Shipwreck.ValueFormatters.Composition;
 
-internal interface IDateTimeDigitSpecifier : IFormatSpecifier<DateTime>, IFormatSpecifier<DateTimeOffset>
+internal interface IDateTimeDigitSpecifier : IStructFormatSpecifier<DateTime>, IStructFormatSpecifier<DateTimeOffset>
 {
     byte MinimumLength { get; }
     byte MaximumLength { get; }

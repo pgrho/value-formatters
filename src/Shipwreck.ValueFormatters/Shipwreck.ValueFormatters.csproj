@@ -10,6 +10,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Generated Code\CompositeFormatSpecifiers.tt">
+		  <Generator>TextTemplatingFileGenerator</Generator>
+		  <LastGenOutput>CompositeFormatSpecifiers.cs</LastGenOutput>
+		</None>
 		<None Update="Generated Code\DateTimeSpecifiers.tt">
 		  <Generator>TextTemplatingFileGenerator</Generator>
 		  <LastGenOutput>DateTimeSpecifiers.cs</LastGenOutput>
@@ -25,6 +29,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Update="Generated Code\CompositeFormatSpecifiers.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>CompositeFormatSpecifiers.tt</DependentUpon>
+		</Compile>
 		<Compile Update="Generated Code\DateTimeSpecifiers.cs">
 		  <DesignTime>True</DesignTime>
 		  <AutoGen>True</AutoGen>
