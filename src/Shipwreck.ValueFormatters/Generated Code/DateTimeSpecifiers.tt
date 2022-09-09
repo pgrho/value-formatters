@@ -1,0 +1,78 @@
+﻿<#@ template language="C#" debug="True" #>
+<#@ assembly name="System.Core.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ output extension="cs" encoding="utf-8" #>
+using System.IO;
+
+namespace Shipwreck.ValueFormatters.Composition;
+
+<#
+var dateDigits = new []
+{
+	"Year1",
+	"Year2",
+	"Year3",
+	"Year4",
+	"Year5",
+	"Month1",
+	"Month2",
+	"Day1",
+	"Day2",
+};
+var timeDigits = new []
+{
+	"Hour1",
+	"Hour2",
+	"TwelveClockHour1",
+	"TwelveClockHour2",
+	"Minute1",
+	"Minute2",
+	"Second1",
+	"Second2",
+};
+var dateNames = new []
+{
+	"MonthName3",
+	"MonthName4",
+	"DayName3",
+	"DayName4",
+};
+foreach (var n in dateDigits.Concat(timeDigits))
+{
+#>
+partial struct <#= n #>Specifier : IDateTimeDigitSpecifier
+{
+    public void WriteTo(TextWriter writer, DateTime value, IFormatProvider formatProvider)
+        => DateTimeDigitSpecifier.WriteToCore(this, writer, value);
+
+    public void WriteTo(TextWriter writer, DateTimeOffset value, IFormatProvider formatProvider)
+        => DateTimeDigitSpecifier.WriteToCore(this, writer, value);
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, DateTime value, IFormatProvider formatProvider)
+        => DateTimeDigitSpecifier.TryFormatCore(this, destination, out charsWritten, value);
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, DateTimeOffset value, IFormatProvider formatProvider)
+        => DateTimeDigitSpecifier.TryFormatCore(this, destination, out charsWritten, value);
+}
+<#
+}
+foreach (var n in dateNames)
+{
+#>
+partial struct <#= n #>Specifier : IDateTimeArraySpecifier
+{
+    public void WriteTo(TextWriter writer, DateTime value, IFormatProvider formatProvider)
+        => DateTimeArraySpecifier.WriteToCore(this, writer, value, formatProvider);
+
+    public void WriteTo(TextWriter writer, DateTimeOffset value, IFormatProvider formatProvider)
+        => DateTimeArraySpecifier.WriteToCore(this, writer, value, formatProvider);
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, DateTime value, IFormatProvider formatProvider)
+        => DateTimeArraySpecifier.TryFormatCore(this, destination, out charsWritten, value, formatProvider);
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, DateTimeOffset value, IFormatProvider formatProvider)
+        => DateTimeArraySpecifier.TryFormatCore(this, destination, out charsWritten, value, formatProvider);
+}
+<#
+}
+#>

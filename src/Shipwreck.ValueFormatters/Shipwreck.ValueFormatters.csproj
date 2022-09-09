@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>netcoreapp3.1;net461;netstandard2.0;net6</TargetFrameworks>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -9,6 +10,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Generated Code\DateTimeSpecifiers.tt">
+		  <Generator>TextTemplatingFileGenerator</Generator>
+		  <LastGenOutput>DateTimeSpecifiers.cs</LastGenOutput>
+		</None>
 		<None Update="Generated Code\IntegerWrapper.tt">
 			<Generator>TextTemplatingFileGenerator</Generator>
 			<LastGenOutput>IntegerWrapper.cs</LastGenOutput>
@@ -20,6 +25,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Update="Generated Code\DateTimeSpecifiers.cs">
+		  <DesignTime>True</DesignTime>
+		  <AutoGen>True</AutoGen>
+		  <DependentUpon>DateTimeSpecifiers.tt</DependentUpon>
+		</Compile>
 		<Compile Update="Generated Code\IntegerWrapper.cs">
 			<DesignTime>True</DesignTime>
 			<AutoGen>True</AutoGen>
