@@ -2,7 +2,7 @@
 
 namespace Shipwreck.ValueFormatters;
 
-public static class TextWriterHelper
+internal static class TextWriterHelper
 {
     public static void WriteTwoDigit(this TextWriter writer, int d)
     {

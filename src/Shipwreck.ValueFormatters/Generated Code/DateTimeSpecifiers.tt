@@ -1,5 +1,6 @@
 ﻿<#@ template language="C#" debug="True" #>
 <#@ assembly name="System.Core.dll" #>
+<#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
 <#@ output extension="cs" encoding="utf-8" #>
 using System.IO;
@@ -37,6 +38,15 @@ var dateNames = new []
 	"DayName3",
 	"DayName4",
 };
+var charLiterals = new Dictionary<string, char>
+{
+	["Whitespace"] = ' ',
+	["Slash"] = '/',
+	["Hyphen"] = '-',
+	["Colon"] = ':',
+	["Dot"] = '.',
+	["CapitalT"] = 'T',
+};
 foreach (var n in dateDigits.Concat(timeDigits))
 {
 #>
@@ -72,6 +82,21 @@ partial struct <#= n #>Specifier : IDateTimeArraySpecifier
 
     public bool TryFormat(Span<char> destination, out int charsWritten, DateTimeOffset value, IFormatProvider formatProvider)
         => DateTimeArraySpecifier.TryFormatCore(this, destination, out charsWritten, value, formatProvider);
+}
+<#
+}
+foreach (var kv in charLiterals.OrderBy(e => e.Key))
+{
+#>
+public partial struct <#= kv.Key #>Specifier<T> : ICharLiteralSpecifier<T>
+{
+    public char Char => '<#= kv.Value #>';
+
+    public void WriteTo(TextWriter writer, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.WriteToCore(this, writer, value);
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.TryFormatCore(this, destination, out charsWritten, value);
 }
 <#
 }

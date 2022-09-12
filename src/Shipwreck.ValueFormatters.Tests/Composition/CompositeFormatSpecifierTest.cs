@@ -32,4 +32,46 @@ public class CompositeFormatSpecifierTest
 
         Assert.Equal(dt.ToString("yyyyMMdd"), result.Format(dt));
     }
+
+    [Theory]
+    [InlineData(2)]
+    [InlineData(15)]
+    [InlineData(16)]
+    public void CreateTest(int n)
+    {
+        var types = Enumerable.Range(0, n).Select(
+            i => (i % 6) switch
+            {
+                0 => typeof(Year2Specifier),
+                1 => typeof(Month2Specifier),
+                2 => typeof(Day2Specifier),
+                3 => typeof(Hour2Specifier),
+                4 => typeof(Minute2Specifier),
+                5 or _ => typeof(Second2Specifier),
+            })
+            .ToList();
+        var format = string.Concat(Enumerable.Range(0, n).Select(
+            i => (i % 6) switch
+            {
+                0 => "yy",
+                1 => "MM",
+                2 => "dd",
+                3 => "HH",
+                4 => "mm",
+                5 or _ => "ss",
+            }));
+
+        var result = CompositeFormatSpecifier.Create(types.Select(e => (IFormatSpecifier<DateTime>)Activator.CreateInstance(e)!));
+
+        var dt = DateTime.Now;
+
+        var ts = (366 * 2 + 31 * 3 + 1 * 5) * TimeSpan.TicksPerDay + 7 * TimeSpan.TicksPerHour + 11 * TimeSpan.TicksPerSecond + 13 * TimeSpan.TicksPerSecond;
+
+        for (var i = 0; i < 10; i++)
+        {
+            Assert.Equal(dt.ToString(format), result.Format(dt));
+
+            dt = dt.AddTicks(ts);
+        }
+    }
 }

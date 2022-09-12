@@ -296,3 +296,63 @@ partial struct DayName4Specifier : IDateTimeArraySpecifier
     public bool TryFormat(Span<char> destination, out int charsWritten, DateTimeOffset value, IFormatProvider formatProvider)
         => DateTimeArraySpecifier.TryFormatCore(this, destination, out charsWritten, value, formatProvider);
 }
+public partial struct CapitalTSpecifier<T> : ICharLiteralSpecifier<T>
+{
+    public char Char => 'T';
+
+    public void WriteTo(TextWriter writer, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.WriteToCore(this, writer, value);
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.TryFormatCore(this, destination, out charsWritten, value);
+}
+public partial struct ColonSpecifier<T> : ICharLiteralSpecifier<T>
+{
+    public char Char => ':';
+
+    public void WriteTo(TextWriter writer, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.WriteToCore(this, writer, value);
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.TryFormatCore(this, destination, out charsWritten, value);
+}
+public partial struct DotSpecifier<T> : ICharLiteralSpecifier<T>
+{
+    public char Char => '.';
+
+    public void WriteTo(TextWriter writer, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.WriteToCore(this, writer, value);
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.TryFormatCore(this, destination, out charsWritten, value);
+}
+public partial struct HyphenSpecifier<T> : ICharLiteralSpecifier<T>
+{
+    public char Char => '-';
+
+    public void WriteTo(TextWriter writer, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.WriteToCore(this, writer, value);
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.TryFormatCore(this, destination, out charsWritten, value);
+}
+public partial struct SlashSpecifier<T> : ICharLiteralSpecifier<T>
+{
+    public char Char => '/';
+
+    public void WriteTo(TextWriter writer, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.WriteToCore(this, writer, value);
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.TryFormatCore(this, destination, out charsWritten, value);
+}
+public partial struct WhitespaceSpecifier<T> : ICharLiteralSpecifier<T>
+{
+    public char Char => ' ';
+
+    public void WriteTo(TextWriter writer, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.WriteToCore(this, writer, value);
+
+    public bool TryFormat(Span<char> destination, out int charsWritten, T value, IFormatProvider formatProvider)
+        => CharLiteralSpecifier.TryFormatCore(this, destination, out charsWritten, value);
+}
